@@ -20,15 +20,18 @@
 
 
 
-.menu li a {
+.menu ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+  position: relative;
+  padding-bottom: 4px;
+
 }
 
 .menu li{
     list-style: none;
-   
+
 }
 
 ul{
@@ -51,6 +54,21 @@ li{
     cursor: pointer;
   }
 
+  .menu ul  li a::after{
+  content: '';
+  position: absolute;
+  bottom: 0;              /* Fica colado na parte de baixo */
+  left: 0;                /* Começa da esquerda */
+  width: 0;               /* Começa invisível */
+  height: 2px;
+  background-color: red;  /* Cor da linha */
+  transition: width 0.3s ease;
+    }
+
+
+  .menu ul  li a:hover::after{
+    width: 100%;
+    }
 
   @media (max-width: 768px) {
     .menu-btn{
@@ -79,3 +97,5 @@ li{
         border-bottom: 1px solid #555;
     }
   }
+
+
