@@ -17,14 +17,6 @@ estados = [
   { nome: 'Minas Gerais', sigla: 'MG' }
 ];
 
-cidades = [
-  { id: 1, nome: 'São Paulo', uf: 'SP' },
-  { id: 2, nome: 'Campinas', uf: 'SP' },
-  { id: 3, nome: 'Rio de Janeiro', uf: 'RJ' },
-  { id: 4, nome: 'Niterói', uf: 'RJ' },
-  { id: 5, nome: 'Belo Horizonte', uf: 'MG' },
-  { id: 6, nome: 'Uberlândia', uf: 'MG' },
-]
 planos = [
   {
     img:'../../../assets/img/Surfbot-Icon1.svg',
