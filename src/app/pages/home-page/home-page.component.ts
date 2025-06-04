@@ -1,6 +1,9 @@
+import { IbgeService } from './../../services/ibge.service';
 import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { FormGroup, FormsModule } from '@angular/forms';
+import { PostService } from './../../services/post/post.service';
 
 @Component({
   selector: 'app-home-page',
@@ -9,13 +12,48 @@ import { FormGroup, FormsModule } from '@angular/forms';
   styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent {
-  estadoSelecionado = '';
-  cidadeSelecionado = '';
-estados = [
-  { nome: 'São Paulo', sigla: 'SP' },
-  { nome: 'Rio de Janeiro', sigla: 'RJ' },
-  { nome: 'Minas Gerais', sigla: 'MG' }
-];
+ erroCep = '';
+
+constructor(private IbgeService: IbgeService,
+   private postService: PostService
+) {}
+
+private limparEndereco() {
+  this.formData.endereco = '';
+  this.formData.cidade = '';
+  this.formData.estado = '';
+}
+
+buscarEnderecoPorCep() {
+  this.erroCep = '';
+  const cep = this.formData.cep.replace(/\D/g, '');
+  if (cep.length !== 8) {
+    this.erroCep = 'CEP inválido.';
+    this.limparEndereco();
+    return;
+  }
+  this.IbgeService.getAddressByCep(cep).subscribe({
+    next: (data: any) => {
+      if (data.erro) {
+        this.erroCep = 'CEP não encontrado.';
+        this.limparEndereco();
+      } else {
+        this.formData.endereco = data.logradouro || '';
+        this.formData.cidade = data.localidade || '';
+        this.formData.estado = data.uf || '';
+        console.log(data)
+      }
+    },
+    error: () => {
+      this.erroCep = 'Erro ao buscar o CEP.';
+      this.limparEndereco();
+    }
+  });
+}
+
+todosCamposVazios(): boolean {
+  return Object.values(this.formData).every(valor => valor.trim() === '');
+}
 
 planos = [
   {
@@ -70,9 +108,32 @@ formData = {
   cidade: ''
 };
 
-todosCamposVazios():boolean {
-    return Object.values(this.formData).every(valor => valor.trim() === '');
+enviarFormulario(){
+  const dadosParaEnviar = {
+    ...this.formData,
+    plano: this.planoSelecionado.nome
+  };
+
+    this.postService.enviarFormulario(dadosParaEnviar).subscribe({
+    next: () => {
+      alert('Formulário enviado com sucesso!');
+      // Limpar formulário se desejar
+      this.formData = {
+        nome: '',
+        email: '',
+        cpf: '',
+        endereco: '',
+        cep: '',
+        estado: '',
+        cidade: ''
+      };
+      this.planoSelecionado = this.planos[0];
+    },error:() => {
+      alert('Erro ao enviar o formulário.');
+    }
+  })
 }
+
 
 
 }

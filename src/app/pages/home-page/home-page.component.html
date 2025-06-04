@@ -24,15 +24,13 @@
     <div class="form-row">
       <div>
         <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" placeholder="Rua, Número, Bairro"  [(ngModel)]="formData.endereco">
+        <input type="text" id="endereco" name="endereco" placeholder="Rua, Número, Bairro"
+           >
       </div>
       <div>
         <label for="estado">Estado</label>
-        <select id="estado" [(ngModel)]="estadoSelecionado" name="estado" required>
-          <option value="" disabled selected hidden>Selecione o estado</option>
-          <option *ngFor="let estado of estados" [value]="estado.sigla">{{ estado.nome }}</option>
-
-        </select>
+  <input type="text" id="estado" name="estado" placeholder="Estado"
+           [(ngModel)]="formData.estado" >
 
       </div>
     </div>
@@ -40,18 +38,22 @@
     <div class="form-row">
       <div>
         <label for="cep">CEP</label>
-        <input type="text" id="cep" name="cep" maxlength="9" placeholder="00000-000" required>
+      <input type="text" id="cep" name="cep" maxlength="9" placeholder="00000-000"
+       required [(ngModel)]="formData.cep"
+       (blur)="buscarEnderecoPorCep()"
+       (keyup.enter)="buscarEnderecoPorCep()">
+           <div *ngIf="erroCep" style="color:red">{{ erroCep }}</div>
       </div>
       <div>
         <label for="cidade">Cidade</label>
-        <select name="cidade" [(ngModel)]="formData.estado" id="cidade" required>
-          <option value="" disabled selected hidden>Selecione a cidade</option>
-          <option *ngFor="let cidade of cidades" [value]="cidade.nome">{{ cidade.nome }}</option>
-        </select>
+     <input type="text" id="cidade" name="cidade" placeholder="Cidade"
+           [(ngModel)]="formData.cidade" readonly>
       </div>
     </div>
 <button type="button"
-        [disabled]="!formData.nome && !formData.email && !formData.cpf && !formData.endereco && !formData.cep && !formData.estado && !formData.cidade" id="button-env">
+        (click)="enviarFormulario()"
+        [disabled]="!formData.nome && !formData.email && !formData.cpf && !formData.endereco && !formData.cep && !formData.estado && !formData.cidade"
+        id="button-env">
   Enviar
 </button>
   </form>
